@@ -13,27 +13,28 @@ interface Assessment {
     status: string;
     score: number | null;
 }
+let assessments: Assessment[] = [];
 
-const dataPath = path.join(__dirname, "../data.json");
+// const dataPath = path.join(__dirname, "../data.json");
 
-// Helper functions to read and write data to the JSON file
-const readData = (): Assessment[] => {
-    try {
-        const data = fs.readFileSync(dataPath, "utf-8");
-        return JSON.parse(data);
-    } catch (error) {
-        console.error("Error reading data:", error);
-        return [];
-    }
-};
+// // Helper functions to read and write data to the JSON file
+// const readData = (): Assessment[] => {
+//     try {
+//         const data = fs.readFileSync(dataPath, "utf-8");
+//         return JSON.parse(data);
+//     } catch (error) {
+//         console.error("Error reading data:", error);
+//         return [];
+//     }
+// };
 
-const writeData = (data: Assessment[]) => {
-    try {
-        fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
-    } catch (error) {
-        console.error("Error writing data:", error);
-    }
-};
+// const writeData = (data: Assessment[]) => {
+//     try {
+//         fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+//     } catch (error) {
+//         console.error("Error writing data:", error);
+//     }
+// };
 export const validateAssessmentFields: RequestHandler = (req, res, next) => {
     const { candidateName, title, status } = req.body;
 
@@ -120,12 +121,12 @@ export const login = (req: Request, res: Response) => {
 };
 
 export const getAssessments = (req: Request, res: Response) => {
-    const assessments = readData();
+    // const assessments = readData();
     res.json(assessments);
 };
 
 export const createAssessment = (req: Request, res: Response) => {
-    const assessments = readData();
+    // const assessments = readData();
     const { candidateName, title, date, status, score } = req.body;
 
     const newAssessment: Assessment = {
@@ -140,12 +141,12 @@ export const createAssessment = (req: Request, res: Response) => {
         score,
     };
     assessments.push(newAssessment);
-    writeData(assessments);
+    // writeData(assessments);
     res.status(201).json(newAssessment);
 };
 
 export const updateAssessment = (req: Request, res: Response) => {
-    const assessments = readData();
+    // const assessments = readData();
     const { id } = req.params;
     const { candidateName, title, date, status, score } = req.body;
     const assessmentIndex = assessments.findIndex((a) => a.id === parseInt(id));
@@ -159,7 +160,7 @@ export const updateAssessment = (req: Request, res: Response) => {
             status,
             score,
         };
-        writeData(assessments);
+        // writeData(assessments);
         res.json(assessments[assessmentIndex]);
     } else {
         res.status(404).json({ message: "Assessment not found" });
@@ -168,8 +169,8 @@ export const updateAssessment = (req: Request, res: Response) => {
 
 export const deleteAssessment = (req: Request, res: Response) => {
     const { id } = req.params;
-    let assessments = readData();
+    // let assessments = readData();
     assessments = assessments.filter((a) => a.id !== parseInt(id));
-    writeData(assessments);
+    // writeData(assessments);
     res.status(204).send();
 };
