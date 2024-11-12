@@ -56,8 +56,3 @@ This is a TypeScript-based Express.js application. This README provides instruct
    ├── tsconfig.json # TypeScript configuration
    └── README.md # Documentation
    └── vercel.json # Vercel config file
-
-6. **For Testing**
-   Login credentials:
-   username: user
-   password: password
