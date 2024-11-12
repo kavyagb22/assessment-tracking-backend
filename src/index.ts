@@ -9,8 +9,8 @@ import { authMiddleware } from "./middleware/authMiddleware";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
+// Middleware setup
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -21,6 +21,5 @@ app.use("/api", unprotectedRouter);
 app.use(authMiddleware); // JWT authentication middleware
 app.use("/api", protectedRouter);
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+// Instead of app.listen, export the app for serverless function handler
+export default app;

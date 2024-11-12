@@ -11,4 +11,3 @@ exports.authMiddleware = (0, express_jwt_1.expressjwt)({
     secret: process.env.JWT_SECRET || "default_secret",
     algorithms: ["HS256"],
 }).unless({ path: ["/api/login"] });
-//# sourceMappingURL=authMiddleware.js.map

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.getAssessments = exports.login = void 0;
+exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.getAssessments = exports.login = exports.test = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const generateToken_1 = require("../util/generateToken");
@@ -27,6 +27,10 @@ const writeData = (data) => {
         console.error("Error writing data:", error);
     }
 };
+const test = (req, res) => {
+    res.json({ message: "API working!" });
+};
+exports.test = test;
 const login = (req, res) => {
     const { username, password } = req.body;
     console.log(username, password);
@@ -96,4 +100,3 @@ const deleteAssessment = (req, res) => {
     res.status(204).send();
 };
 exports.deleteAssessment = deleteAssessment;
-//# sourceMappingURL=assessmentController.js.map

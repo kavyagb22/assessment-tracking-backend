@@ -11,4 +11,3 @@ exports.protectedRouter.get("/assessments", assessmentController_1.getAssessment
 exports.protectedRouter.post("/create-assessment", assessmentController_1.createAssessment);
 exports.protectedRouter.put("/update-assessment/:id", assessmentController_1.updateAssessment);
 exports.protectedRouter.delete("/delete-assessments/:id", assessmentController_1.deleteAssessment);
-//# sourceMappingURL=protectedRoutes.js.map

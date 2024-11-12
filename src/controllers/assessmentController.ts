@@ -42,6 +42,14 @@ export const test = (req: Request, res: Response) => {
 export const login = (req: Request, res: Response) => {
     const { username, password } = req.body;
     console.log(username, password);
+    if (!username) {
+        return res.status(400).json({ error: "Username is required" });
+    }
+
+    if (!password) {
+        return res.status(400).json({ error: "Password is required" });
+    }
+
     if (username === "user" && password === "password") {
         const token = generateToken({ username });
         res.json({
@@ -65,6 +73,24 @@ export const getAssessments = (req: Request, res: Response) => {
 export const createAssessment = (req: Request, res: Response) => {
     const assessments = readData();
     const { candidateName, title, date, status, score } = req.body;
+    if (!candidateName) {
+        return res.status(400).json({ error: "Candidate name is required" });
+    }
+
+    if (!title) {
+        return res.status(400).json({ error: "Assessment title is required" });
+    }
+
+    if (!status) {
+        return res.status(400).json({ error: "Completion status is required" });
+    }
+
+    // Ensure status is either "Pending" or "Completed"
+    if (status !== "Pending" && status !== "Completed") {
+        return res
+            .status(400)
+            .json({ error: "Status must be 'Pending' or 'Completed'" });
+    }
     const newAssessment: Assessment = {
         id:
             assessments.length > 0
@@ -85,6 +111,24 @@ export const updateAssessment = (req: Request, res: Response) => {
     const assessments = readData();
     const { id } = req.params;
     const { candidateName, title, date, status, score } = req.body;
+    if (!candidateName) {
+        return res.status(400).json({ error: "Candidate name is required" });
+    }
+
+    if (!title) {
+        return res.status(400).json({ error: "Assessment title is required" });
+    }
+
+    if (!status) {
+        return res.status(400).json({ error: "Completion status is required" });
+    }
+
+    // Ensure status is either "Pending" or "Completed"
+    if (status !== "Pending" && status !== "Completed") {
+        return res
+            .status(400)
+            .json({ error: "Status must be 'Pending' or 'Completed'" });
+    }
     const assessmentIndex = assessments.findIndex((a) => a.id === parseInt(id));
 
     if (assessmentIndex !== -1) {
