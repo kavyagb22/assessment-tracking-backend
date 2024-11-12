@@ -35,6 +35,10 @@ const writeData = (data: Assessment[]) => {
     }
 };
 
+export const test = (req: Request, res: Response) => {
+    res.json({ message: "API working!" });
+};
+
 export const login = (req: Request, res: Response) => {
     const { username, password } = req.body;
     console.log(username, password);
