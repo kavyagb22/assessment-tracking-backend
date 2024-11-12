@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "candidateName": "Test ",
+    "title": "Test",
+    "date": "2024-11-05",
+    "status": "Pending",
+    "score": "90"
+  },
+  {
+    "id": 2,
+    "candidateName": "Test 2",
+    "title": "Test2",
+    "date": "2024-11-07",
+    "status": "Completed",
+    "score": "0"
+  }
+]
