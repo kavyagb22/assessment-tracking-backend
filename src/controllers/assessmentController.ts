@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, RequestHandler } from "express";
 import fs from "fs";
 import path from "path";
 import jwt from "jsonwebtoken";
@@ -34,21 +34,75 @@ const writeData = (data: Assessment[]) => {
         console.error("Error writing data:", error);
     }
 };
+export const validateAssessmentFields: RequestHandler = (req, res, next) => {
+    const { candidateName, title, status } = req.body;
+
+    if (!candidateName) {
+        res.json({
+            status: ResponseStatusCode.OPERATING_FAILED,
+            message: "Candidate Name is required",
+        });
+        return;
+    }
+
+    if (!title) {
+        res.json({
+            status: ResponseStatusCode.OPERATING_FAILED,
+            message: "Assessment Title is required",
+        });
+        return;
+    }
+
+    if (!status) {
+        res.json({
+            status: ResponseStatusCode.OPERATING_FAILED,
+            message: "Completion Status is required",
+        });
+        return;
+    }
+
+    if (status !== "Pending" && status !== "Completed") {
+        res.json({
+            status: ResponseStatusCode.OPERATING_FAILED,
+            message: "Status must be 'Pending' or 'Completed'",
+        });
+        return;
+    }
+
+    next();
+};
+
+export const validateLoginFields: RequestHandler = (req, res, next) => {
+    const { username, password } = req.body;
+    if (!username) {
+        res.json({
+            status: ResponseStatusCode.OPERATING_FAILED,
+            message: "Username is required",
+        });
+        return;
+    }
+
+    if (!password) {
+        res.json({
+            status: ResponseStatusCode.OPERATING_FAILED,
+            message: "Password is required",
+        });
+        return;
+    }
+
+    next();
+};
 
 export const test = (req: Request, res: Response) => {
-    res.json({ message: "API working!" });
+    res.json({
+        status: ResponseStatusCode.OPERATING_SUCCESSFULLY,
+        message: "API working!",
+    });
 };
 
 export const login = (req: Request, res: Response) => {
     const { username, password } = req.body;
     console.log(username, password);
-    if (!username) {
-        return res.status(400).json({ error: "Username is required" });
-    }
-
-    if (!password) {
-        return res.status(400).json({ error: "Password is required" });
-    }
 
     if (username === "user" && password === "password") {
         const token = generateToken({ username });
@@ -58,7 +112,7 @@ export const login = (req: Request, res: Response) => {
             token,
         });
     } else {
-        res.status(401).json({
+        res.json({
             status: ResponseStatusCode.UNAUTHORIZED,
             message: "Invalid credentials",
         });
@@ -73,24 +127,7 @@ export const getAssessments = (req: Request, res: Response) => {
 export const createAssessment = (req: Request, res: Response) => {
     const assessments = readData();
     const { candidateName, title, date, status, score } = req.body;
-    if (!candidateName) {
-        return res.status(400).json({ error: "Candidate name is required" });
-    }
 
-    if (!title) {
-        return res.status(400).json({ error: "Assessment title is required" });
-    }
-
-    if (!status) {
-        return res.status(400).json({ error: "Completion status is required" });
-    }
-
-    // Ensure status is either "Pending" or "Completed"
-    if (status !== "Pending" && status !== "Completed") {
-        return res
-            .status(400)
-            .json({ error: "Status must be 'Pending' or 'Completed'" });
-    }
     const newAssessment: Assessment = {
         id:
             assessments.length > 0
@@ -111,24 +148,6 @@ export const updateAssessment = (req: Request, res: Response) => {
     const assessments = readData();
     const { id } = req.params;
     const { candidateName, title, date, status, score } = req.body;
-    if (!candidateName) {
-        return res.status(400).json({ error: "Candidate name is required" });
-    }
-
-    if (!title) {
-        return res.status(400).json({ error: "Assessment title is required" });
-    }
-
-    if (!status) {
-        return res.status(400).json({ error: "Completion status is required" });
-    }
-
-    // Ensure status is either "Pending" or "Completed"
-    if (status !== "Pending" && status !== "Completed") {
-        return res
-            .status(400)
-            .json({ error: "Status must be 'Pending' or 'Completed'" });
-    }
     const assessmentIndex = assessments.findIndex((a) => a.id === parseInt(id));
 
     if (assessmentIndex !== -1) {

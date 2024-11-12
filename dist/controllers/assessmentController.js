@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.getAssessments = exports.login = exports.test = void 0;
+exports.deleteAssessment = exports.updateAssessment = exports.createAssessment = exports.getAssessments = exports.login = exports.test = exports.validateLoginFields = exports.validateAssessmentFields = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const generateToken_1 = require("../util/generateToken");
@@ -27,8 +27,63 @@ const writeData = (data) => {
         console.error("Error writing data:", error);
     }
 };
+const validateAssessmentFields = (req, res, next) => {
+    const { candidateName, title, status } = req.body;
+    if (!candidateName) {
+        res.json({
+            status: "2000" /* ResponseStatusCode.OPERATING_FAILED */,
+            message: "Candidate Name is required",
+        });
+        return;
+    }
+    if (!title) {
+        res.json({
+            status: "2000" /* ResponseStatusCode.OPERATING_FAILED */,
+            message: "Assessment Title is required",
+        });
+        return;
+    }
+    if (!status) {
+        res.json({
+            status: "2000" /* ResponseStatusCode.OPERATING_FAILED */,
+            message: "Completion Status is required",
+        });
+        return;
+    }
+    if (status !== "Pending" && status !== "Completed") {
+        res.json({
+            status: "2000" /* ResponseStatusCode.OPERATING_FAILED */,
+            message: "Status must be 'Pending' or 'Completed'",
+        });
+        return;
+    }
+    next();
+};
+exports.validateAssessmentFields = validateAssessmentFields;
+const validateLoginFields = (req, res, next) => {
+    const { username, password } = req.body;
+    if (!username) {
+        res.json({
+            status: "2000" /* ResponseStatusCode.OPERATING_FAILED */,
+            message: "Username is required",
+        });
+        return;
+    }
+    if (!password) {
+        res.json({
+            status: "2000" /* ResponseStatusCode.OPERATING_FAILED */,
+            message: "Password is required",
+        });
+        return;
+    }
+    next();
+};
+exports.validateLoginFields = validateLoginFields;
 const test = (req, res) => {
-    res.json({ message: "API working!" });
+    res.json({
+        status: "0000" /* ResponseStatusCode.OPERATING_SUCCESSFULLY */,
+        message: "API working!",
+    });
 };
 exports.test = test;
 const login = (req, res) => {
@@ -43,7 +98,7 @@ const login = (req, res) => {
         });
     }
     else {
-        res.status(401).json({
+        res.json({
             status: "2002" /* ResponseStatusCode.UNAUTHORIZED */,
             message: "Invalid credentials",
         });
